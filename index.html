@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0A101B">
+  <meta name="description" content="NexorLab imagine des outils numériques simples et bien pensés. Découvrez Notify+, notre extension de notifications pour les lives Twitch.">
+  <title>NexorLab — Des idées qui prennent vie.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('nexorlab-theme')||'dark'}catch(e){}</script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"><div class="ambient-grid"></div><div class="ambient-halo halo-one"></div><div class="ambient-halo halo-two"></div><div class="ambient-rings"></div><div class="ambient-glow"></div></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <a class="skip-link" href="#main">Passer au contenu</a>
+  <header class="site-header" id="top">
+    <div class="nav-wrap shell">
+      <a class="brand" href="#top" aria-label="NexorLab, retour à l'accueil">
+        <img class="brand-logo brand-dark" src="assets/logo-blanc.png" alt="NexorLab">
+        <img class="brand-logo brand-light" src="assets/logo-fonce.png" alt="NexorLab">
+      </a>
+      <nav class="site-nav" id="site-nav" aria-label="Navigation principale">
+        <a class="nav-link active" href="#accueil">Accueil</a>
+        <a class="nav-link" href="#notify">Notify+</a>
+        <a class="nav-link" href="#fonctionnement">Comment ça marche</a>
+        <a class="nav-link" href="#studio">Le studio</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="palette-control" id="palette-control">
+          <button class="palette-trigger" id="palette-trigger" type="button" aria-label="Personnaliser les couleurs" aria-expanded="false" aria-controls="palette-panel" aria-haspopup="dialog" title="Personnaliser les couleurs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.5a2.5 2.5 0 0 0 2.1-3.9 1.65 1.65 0 0 1 1.35-2.6H19a2 2 0 0 0 2-2A9 9 0 0 0 12 3Z"/><circle cx="7.6" cy="11.6" r="1" fill="currentColor" stroke="none"/><circle cx="11" cy="7.6" r="1" fill="currentColor" stroke="none"/><circle cx="16.2" cy="8.8" r="1" fill="currentColor" stroke="none"/><circle cx="7.7" cy="16" r="1" fill="currentColor" stroke="none"/></svg>
+            <span class="palette-trigger-dot" id="palette-trigger-dot" aria-hidden="true"></span>
+          </button>
+          <div class="palette-panel" id="palette-panel" role="dialog" aria-label="Personnalisation des couleurs" hidden>
+            <div class="palette-panel-head"><div><span class="palette-eyebrow">VOTRE NEXORLAB</span><h2>À vos couleurs<span>.</span></h2><p>Essayez un style. Le site change en direct.</p></div><button class="palette-close" id="palette-close" aria-label="Fermer le personnalisateur" type="button">×</button></div>
+            <div class="palette-panel-body">
+              <div class="palette-section-title"><span>PALETTES PRÊTES À L'EMPLOI</span><span id="palette-current">Citron</span></div>
+              <div class="palette-presets" role="group" aria-label="Palettes prédéfinies">
+                <button type="button" class="palette-preset" data-preset="citron" aria-pressed="true"><span class="palette-preview" style="--swatch-bg:#0A101B;--swatch-accent:#A3E635"><i></i></span><span>Citron</span></button>
+                <button type="button" class="palette-preset" data-preset="violet" aria-pressed="false"><span class="palette-preview" style="--swatch-bg:#130F24;--swatch-accent:#A855F7"><i></i></span><span>Violet</span></button>
+                <button type="button" class="palette-preset" data-preset="cyan" aria-pressed="false"><span class="palette-preview" style="--swatch-bg:#091722;--swatch-accent:#22D3EE"><i></i></span><span>Cyan</span></button>
+                <button type="button" class="palette-preset" data-preset="ambre" aria-pressed="false"><span class="palette-preview" style="--swatch-bg:#1A1410;--swatch-accent:#F59E0B"><i></i></span><span>Ambre</span></button>
+                <button type="button" class="palette-preset" data-preset="cobalt" aria-pressed="false"><span class="palette-preview" style="--swatch-bg:#0D1630;--swatch-accent:#3B82F6"><i></i></span><span>Cobalt</span></button>
+              </div>
+              <div class="palette-section-title palette-custom-heading"><span>OU CRÉEZ VOTRE PROPRE STYLE</span><span class="custom-indicator" id="palette-custom-indicator">SUR MESURE</span></div>
+              <div class="palette-fields">
+                <div class="palette-field"><label for="palette-accent-hex">Couleur principale</label><div class="palette-input-group"><input id="palette-accent-color" type="color" aria-label="Choisir la couleur principale" value="#A3E635"><input id="palette-accent-hex" type="text" value="#A3E635" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Code HEX de la couleur principale"></div></div>
+                <div class="palette-field"><label for="palette-bg-hex" id="palette-bg-label">Fond sombre</label><div class="palette-input-group"><input id="palette-bg-color" type="color" aria-label="Choisir la couleur du fond" value="#0A101B"><input id="palette-bg-hex" type="text" value="#0A101B" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Code HEX du fond actuel"></div></div>
+              </div>
+              <p class="palette-hint">Le fond clair et le fond sombre sont réglables séparément. Vos choix sont enregistrés sur cet appareil.</p>
+            </div>
+            <div class="palette-panel-foot"><button type="button" class="palette-reset" id="palette-reset"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11a9 9 0 1 1 3 7M3 5v6h6"/></svg> Réinitialiser</button><span class="palette-save-status" id="palette-save-status" role="status"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 10 4 4 8-8"/></svg> Enregistré</span></div>
+          </div>
+        </div>
+        <span class="theme-name" id="theme-name">Sombre</span>
+        <button class="theme-switch" id="theme-switch" role="switch" aria-checked="true" aria-label="Activer le thème clair" type="button" title="Changer le thème">
+          <svg class="track-icon track-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.2 15.3A8.5 8.5 0 018.7 3.8 8.5 8.5 0 1020.2 15.3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          <svg class="track-icon track-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <span class="switch-knob" aria-hidden="true"></span>
+        </button>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Ouvrir le menu"><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero shell" id="accueil" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <div class="eyebrow"><span class="eyebrow-asterisk">✳</span><span>STUDIO INDÉPENDANT · OUTILS POUR LE WEB</span></div>
+        <h1 id="hero-title">Le numérique,<br> <span class="stroke-word">en mieux<span class="stroke-swish" aria-hidden="true"></span></span><span class="dot">.</span></h1>
+        <p class="hero-subtitle">Des outils qui font exactement ce dont vous avez besoin. Rien de plus. Rien de compliqué.</p>
+        <div class="hero-buttons">
+          <a class="button button-primary" href="#notify">Découvrir Notify+ <span class="btn-arrow" aria-hidden="true">↗</span></a>
+          <button class="button button-text" id="hero-demo" type="button"><span class="play-icon" aria-hidden="true">▶</span> Voir la démo</button>
+        </div>
+        <div class="hero-bottom"><span class="hero-dash"></span><span>UN PREMIER OUTIL.<br><strong>PLEIN D'IDÉES POUR LA SUITE.</strong></span></div>
+      </div>
+
+      <div class="hero-visual" id="hero-visual" aria-label="Démonstration interactive de Notify+">
+        <div class="visual-orbit orbit-outer"></div><div class="visual-orbit orbit-inner"></div>
+        <div class="floating-label floating-label-top"><span class="green-dot"></span> NOTIFICATIONS ACTIVÉES</div>
+        <div class="demo-window" id="demo-window">
+          <div class="window-head"><div class="window-dots" aria-hidden="true"><i></i><i></i><i></i></div><span class="window-address"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M5 11V8a7 7 0 0114 0v3m-14 0h14v9H5v-9Z" fill="none" stroke="currentColor" stroke-width="2"/></svg> nexorlab / notify-plus</span><span class="window-more" aria-hidden="true">•••</span></div>
+          <div class="window-body">
+            <div class="app-head"><span class="app-emblem" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3c-4 0-6 3-6 7v4l-2 3h16l-2-3v-4c0-4-2-7-6-7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 20h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><div><span class="app-brand">Notify<span>+</span></span><span class="app-caption">Les lives viennent à vous.</span></div><span class="version-pill">APERÇU</span></div>
+            <div class="app-separator"></div>
+            <div class="app-heading"><div><div class="small-heading">VOTRE ESPACE</div><h2>Tout est sous contrôle<span class="dot">.</span></h2></div><span class="live-ping" title="Aperçu interactif"><span></span> EN VEILLE</span></div>
+            <div class="app-setting"><div class="setting-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 8h14M5 16h14M9 5v6m6 2v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><div class="setting-copy"><strong>Alertes de live</strong><span id="preview-status">Prêtes à vous prévenir</span></div><button type="button" class="mini-switch on" id="preview-toggle" role="switch" aria-label="Activer les alertes de démonstration" aria-checked="true"><span></span></button></div>
+            <div class="alert-preview" id="alert-preview"><span class="alert-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3c-4 0-6 3-6 7v4l-2 3h16l-2-3v-4c0-4-2-7-6-7Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 20h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><div><span class="alert-label">NOUVEAU LIVE DÉTECTÉ</span><strong>Votre streamer est en direct !</strong><small>Exemple de notification · à l'instant</small></div><span class="alert-live">LIVE <i></i></span></div>
+            <button class="simulate-button" id="simulate-inline" type="button">Simuler une notification <span aria-hidden="true">↗</span></button>
+          </div>
+          <div class="window-footer"><span class="green-dot"></span> Interface de démonstration <span>NOTIFY+ / 01</span></div>
+        </div>
+        <div class="floating-label floating-label-bottom"><span class="float-spark">✦</span> LE WEB, PLUS SIMPLE.</div>
+      </div>
+      <a class="scroll-cue" href="#manifeste" aria-label="Faire défiler vers la section suivante"><span class="scroll-line"></span> DÉFILER POUR EXPLORER</a>
+    </section>
+
+    <section class="statement" id="manifeste" aria-label="Notre philosophie"><div class="statement-inner shell"><span class="statement-overline">LA PHILOSOPHIE NEXORLAB</span><p>Moins de bruit<span>.</span> <strong>Plus d'essentiel.</strong></p><span class="statement-mark" aria-hidden="true">✳</span></div></section>
+
+    <section class="product-section section-space shell" id="notify" aria-labelledby="notify-heading">
+      <div class="section-intro reveal"><div><span class="overline"><span class="index">01 /</span> PREMIÈRE CRÉATION</span><h2 id="notify-heading">Une petite extension.<br><em>Un grand confort.</em></h2></div><p>Vous suivez des créateurs sur Twitch ? Notify+ vous aide à savoir quand un live commence, sans rester devant la plateforme.</p></div>
+      <div class="product-showcase reveal">
+        <div class="product-left"><div class="product-topline"><span class="product-type"><span class="mini-square"></span> EXTENSION NAVIGATEUR</span><span class="stage">EN PRÉPARATION</span></div><div class="product-main"><div class="product-glyph"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3c-4.5 0-6.5 3.3-6.5 7.3v3.9L3 18h18l-2.5-3.8v-3.9C18.5 6.3 16.5 3 12 3Z" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/><path d="M10 21h4" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/></svg></div><h3>Notify<span>+</span></h3><p>Votre prochain live préféré ne passera plus inaperçu.</p></div><div class="product-footer"><button class="button button-primary" id="product-demo" type="button">Essayer la démo <span class="btn-arrow" aria-hidden="true">↗</span></button><span>Firefox en préparation<br>Chrome envisagé</span></div></div>
+        <div class="product-right"><div class="feature-row"><span class="feature-number">01</span><div class="feature-icon">◎</div><div><h4>Au bon moment</h4><p>Une notification lorsqu'un streamer suivi lance son live.</p></div><span class="feature-arrow">↗</span></div><div class="feature-row"><span class="feature-number">02</span><div class="feature-icon">♫</div><div><h4>À votre façon</h4><p>Personnalisez les alertes avec votre propre son.</p></div><span class="feature-arrow">↗</span></div><div class="feature-row"><span class="feature-number">03</span><div class="feature-icon">✳</div><div><h4>Sans en faire trop</h4><p>Un outil pensé pour rester simple à utiliser.</p></div><span class="feature-arrow">↗</span></div></div>
+      </div>
+    </section>
+
+    <section class="steps-wrap" id="fonctionnement" aria-labelledby="steps-heading"><div class="shell section-space"><div class="section-intro reveal"><div><span class="overline"><span class="index">02 /</span> LE PRINCIPE</span><h2 id="steps-heading">Trois étapes.<br><em>Zéro prise de tête.</em></h2></div><p>Quelques réglages, et vous voilà prêt à ne plus manquer les diffusions qui vous intéressent.</p></div><div class="steps-grid"><article class="step-card reveal"><span class="step-count">01<span> / 03</span></span><div class="step-illustration step-browser" aria-hidden="true"><div class="browser-shell"><div class="browser-top"><i></i><i></i><i></i></div><div class="browser-lines"><span></span><span></span><span></span></div></div><span class="step-small-star">✳</span></div><h3>Installez</h3><p>Ajoutez l'extension dans votre navigateur lorsqu'elle sera disponible.</p></article><article class="step-card reveal"><span class="step-count">02<span> / 03</span></span><div class="step-illustration step-channel" aria-hidden="true"><div class="channel-avatar">✦</div><div class="channel-lines"><span></span><span></span></div><div class="channel-check">✓</div></div><h3>Personnalisez</h3><p>Choisissez les chaînes à suivre et les paramètres de vos notifications.</p></article><article class="step-card reveal"><span class="step-count">03<span> / 03</span></span><div class="step-illustration step-bell" aria-hidden="true"><div class="bell-halo"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3c-4.5 0-6.5 3.3-6.5 7.3v3.9L3 18h18l-2.5-3.8v-3.9C18.5 6.3 16.5 3 12 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M10 21h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><span class="notification-dot"></span></div><h3>Profitez</h3><p>Retrouvez vos notifications de live au moment où elles comptent.</p></article></div></div></section>
+
+    <section class="studio-section section-space shell" id="studio" aria-labelledby="studio-heading"><div class="studio-grid"><div class="studio-copy reveal"><span class="overline"><span class="index">03 /</span> LE STUDIO</span><h2 id="studio-heading">Un laboratoire<br>d'<em>idées utiles.</em></h2><p>NexorLab, c'est un espace de création indépendant dédié aux outils numériques et aux petites innovations du quotidien. Le projet commence avec Notify+, et d'autres idées suivront.</p><a href="#notify" class="inline-link">Découvrir notre premier projet <span aria-hidden="true">↗</span></a></div><div class="studio-art reveal" aria-hidden="true"><div class="big-circular-word">NEXOR / LAB / NEXOR / LAB /</div><span class="studio-star">✳</span><span class="studio-label">BUILDING<br>BETTER<br>DIGITAL.</span><div class="studio-coordinates">NL — 001 / 2026</div></div></div></section>
+
+    <section class="final-cta shell" aria-labelledby="final-heading"><div class="cta-panel reveal"><div class="cta-orb" aria-hidden="true"></div><span class="overline">ET SI ON SIMPLIFIAIT LE WEB ?</span><h2 id="final-heading">Le prochain clic<br><em>change tout.</em></h2><p>Explorez Notify+ et découvrez les premières idées du laboratoire.</p><a class="button button-contrast" href="#notify">Découvrir le projet <span class="btn-arrow" aria-hidden="true">↗</span></a><span class="cta-decoration" aria-hidden="true">✳</span></div></section>
+  </main>
+
+  <footer class="site-footer"><div class="shell footer-row"><a class="footer-brand" href="#top" aria-label="Retour à l'accueil"><img class="brand-dark" src="assets/logo-blanc.png" alt="NexorLab"><img class="brand-light" src="assets/logo-fonce.png" alt="NexorLab"></a><p>Des idées simples. Des outils qui comptent.</p><div class="footer-right"><a href="#top">Retour en haut ↑</a><span>© 2026 NexorLab</span></div></div></footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"><div class="toast-bell" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3c-4 0-6 3-6 7v4l-2 3h16l-2-3v-4c0-4-2-7-6-7Z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M10 20h4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></div><div class="toast-message"><span>NOTIFY+ · DÉMONSTRATION</span><strong>Votre streamer est en direct !</strong><small>Une nouvelle diffusion vient de commencer.</small></div><button id="toast-close" class="toast-close" type="button" aria-label="Fermer la notification">×</button></div>
+</body>
+</html>
